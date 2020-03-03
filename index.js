@@ -70,7 +70,7 @@ function packetRead(bsz, bufs, buf, fn) {
   while(bsz>=2) {
     // 2. is packet available?
     var buf = bufs[0].length<2? buffersConcat(bufs) : bufs[0];
-    var psz = buf.readUInt16BE(0, true);
+    var psz = buf.readUInt32BE(0, true);
     if(bsz<psz) break;
     // 3. read [size][on][set][tag][body]
     buf = buffersConcat(bufs);
@@ -91,7 +91,7 @@ function packetWrite(on, set, tag, body) {
   body = body||BUFFER_EMPTY;
   const buf = Buffer.allocUnsafe(12+body.length);
   // 2. write [size][on][set][tag][body]
-  buf.writeUInt16BE(buf.length, 0, true);
+  buf.writeUInt32BE(buf.length, 0, true);
   buf.write(on, 2, 2);
   buf.writeUInt32BE(set, 4, true);
   buf.writeUInt32BE(tag, 8, true);
