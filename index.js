@@ -74,7 +74,7 @@ function packetRead(bsz, bufs, buf, fn) {
     if(bsz<psz) break;
     // 3. read [size][on][set][tag][body]
     buf = buffersConcat(bufs);
-    const on = buf.toString('utf8', 4, 4);
+    const on = buf.toString('utf8', 4, 6);
     const set = buf.readUInt32BE(6, true);
     const tag = buf.readUInt32BE(10, true);
     const body = buf.slice(14, psz);
