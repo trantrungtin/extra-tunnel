@@ -74,10 +74,10 @@ function packetRead(bsz, bufs, buf, fn) {
     if(bsz<psz) break;
     // 3. read [size][on][set][tag][body]
     buf = buffersConcat(bufs);
-    const on = buf.toString('utf8', 2, 4);
-    const set = buf.readUInt32BE(4, true);
-    const tag = buf.readUInt32BE(8, true);
-    const body = buf.slice(12, psz);
+    const on = buf.toString('utf8', 4, 4);
+    const set = buf.readUInt32BE(6, true);
+    const tag = buf.readUInt32BE(10, true);
+    const body = buf.slice(14, psz);
     // 4. update buffers and call
     bufs[0] = buf.slice(psz);
     bsz = bufs[0].length;
@@ -89,13 +89,13 @@ function packetRead(bsz, bufs, buf, fn) {
 function packetWrite(on, set, tag, body) {
   // 1. allocate buffer
   body = body||BUFFER_EMPTY;
-  const buf = Buffer.allocUnsafe(12+body.length);
+  const buf = Buffer.allocUnsafe(14+body.length);
   // 2. write [size][on][set][tag][body]
   buf.writeUInt32BE(buf.length, 0, true);
-  buf.write(on, 2, 2);
-  buf.writeUInt32BE(set, 4, true);
-  buf.writeUInt32BE(tag, 8, true);
-  body.copy(buf, 12);
+  buf.write(on, 4, 2);
+  buf.writeUInt32BE(set, 6, true);
+  buf.writeUInt32BE(tag, 10, true);
+  body.copy(buf, 14);
   return buf;
 };
 
